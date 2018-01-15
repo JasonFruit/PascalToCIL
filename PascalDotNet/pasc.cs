@@ -12,6 +12,8 @@ namespace PascalDotNet
             List<Token> tokens = t.Tokenize(code);
             foreach (Token token in tokens)
             {
+                Console.Write(token.Type);
+                Console.Write(": ");
                 Console.WriteLine(token.Text + " (" + token.Line.ToString() + ", " + token.Column.ToString() + ")");
             }
         }

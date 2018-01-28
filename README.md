@@ -18,7 +18,3 @@ Endorsements
 
 >   We managed to put together a compilation that had some creativity
 >   to it. — **Joni Mitchell**
-
->   I have a lot of variety within me, and the dream role, I think, is
->   actually a compilation of parts that express different aspects of
->   my persona and personal interests. — **Ashley Judd**

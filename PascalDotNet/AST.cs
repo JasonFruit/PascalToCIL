@@ -19,6 +19,7 @@ namespace PascalDotNet {
         Procedure,
         Argument,
         Call,
+        ArithmeticExpression,
         Operator,
         Expression,
         Identifier,
@@ -33,7 +34,20 @@ namespace PascalDotNet {
         public NodeTypes Type;
     }
 
-    public class VarNode: ASTNode {
+    public class ArithmeticNode : ASTNode {
+        public ASTNode Left;
+        public OperatorNode Operator;
+        public ASTNode Right;
+
+        public ArithmeticNode(ASTNode left, OperatorNode op, ASTNode right) {
+            Type = NodeTypes.ArithmeticExpression;
+            Left = left;
+            Operator = op;
+            Right = right;
+        }
+    }
+
+    public class VarNode : ASTNode {
         public string Name;
         public IdentifierNode TypeNode;
         public ASTNode ValueExpression;
@@ -52,7 +66,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class VarSectionNode: ASTNode {
+    public class VarSectionNode : ASTNode {
         public List<VarNode> Vars;
 
         public VarSectionNode() {
@@ -60,7 +74,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class IntegerNode: ASTNode {
+    public class IntegerNode : ASTNode {
         public int Value;
 
         public IntegerNode(int value) {
@@ -69,7 +83,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class StringNode: ASTNode {
+    public class StringNode : ASTNode {
         public string Value;
 
         public StringNode(string value) {
@@ -78,7 +92,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class OperatorNode: ASTNode {
+    public class OperatorNode : ASTNode {
         public string Operator;
 
         public OperatorNode(string theOperator) {
@@ -87,7 +101,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class IdentifierNode: ASTNode {
+    public class IdentifierNode : ASTNode {
         public string Name;
 
         public IdentifierNode(string name) {
@@ -96,14 +110,14 @@ namespace PascalDotNet {
         }
     }
 
-    public abstract class RoutineNode: ASTNode {
+    public abstract class RoutineNode : ASTNode {
         public IdentifierNode Name;
         public List<ParameterNode> Parameters = new List<ParameterNode>();
         public List<VarNode> Vars = new List<VarNode>();
         public BlockNode Body = new BlockNode();
     }
 
-    public class ParameterNode: ASTNode {
+    public class ParameterNode : ASTNode {
         public IdentifierNode Identifier;
         public IdentifierNode TypeIdentifier;
         public Boolean IsVariable = false;
@@ -118,7 +132,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class FunctionNode: RoutineNode {
+    public class FunctionNode : RoutineNode {
         public IdentifierNode ReturnTypeIdentifier;
 
         public FunctionNode(IdentifierNode name,
@@ -129,7 +143,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class ProcedureNode: RoutineNode {
+    public class ProcedureNode : RoutineNode {
 
         public ProcedureNode(IdentifierNode name,
                             IdentifierNode returnType) {
@@ -138,7 +152,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class ArgumentNode: ASTNode {
+    public class ArgumentNode : ASTNode {
         public IdentifierNode Identifier;
         public IdentifierNode TypeIdentifier;
         public Boolean IsVariable;
@@ -156,7 +170,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class CallNode: ASTNode {
+    public class CallNode : ASTNode {
         public IdentifierNode RoutineIdentifier;
         public List<ASTNode> Args;
 
@@ -174,7 +188,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class BlockNode: ASTNode {
+    public class BlockNode : ASTNode {
         public List<ASTNode> Children;
 
         public BlockNode() {
@@ -183,7 +197,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class ProgramNode: ASTNode {
+    public class ProgramNode : ASTNode {
         public string Name;
         public VarSectionNode Vars = new VarSectionNode();
         public BlockNode Body = new BlockNode();
@@ -193,7 +207,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class ConditionBlockNode: ASTNode {
+    public class ConditionBlockNode : ASTNode {
         public ASTNode Condition;
         public BlockNode Block;
 
@@ -206,7 +220,7 @@ namespace PascalDotNet {
 
     }
 
-    public class IfNode: ASTNode {
+    public class IfNode : ASTNode {
         public List<ConditionBlockNode> ConditionBlocks;
 
         public IfNode() {
@@ -215,7 +229,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class WhileNode: ASTNode {
+    public class WhileNode : ASTNode {
         public ConditionBlockNode ConditionBlock;
 
         public WhileNode(ConditionBlockNode block) {
@@ -224,7 +238,7 @@ namespace PascalDotNet {
         }
     }
 
-    public class ForNode: ASTNode {
+    public class ForNode : ASTNode {
         IdentifierNode LoopVar;
         ASTNode InitExpression;
         ASTNode TerminateExpression;

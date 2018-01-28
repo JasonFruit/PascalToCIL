@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace PascalDotNet
@@ -7,14 +8,19 @@ namespace PascalDotNet
     {
         static void Main(string[] args)
         {
-            string code = System.IO.File.ReadAllText("/home/jason/Code/PascalCIL/samples/sample.pas");
+            string code = File.ReadAllText(
+                "/home/jason/Code/PascalCIL/samples/sample.pas");
+            
             Tokenizer t = new Tokenizer();
             List<Token> tokens = t.Tokenize(code);
+            
             foreach (Token token in tokens)
             {
                 Console.Write(token.Type);
                 Console.Write(": ");
-                Console.WriteLine(token.Text + " (" + token.Line.ToString() + ", " + token.Column.ToString() + ")");
+                Console.WriteLine(token.Text + " (" +
+                                  token.Line.ToString() + ", " +
+                                  token.Column.ToString() + ")");
             }
         }
     }

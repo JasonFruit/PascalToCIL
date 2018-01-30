@@ -4,7 +4,14 @@ using System.Collections.Specialized;
 
 namespace PascalDotNet {
 
-    public enum TokenTypes { Symbol, WordSymbol, Identifier, Number, String, Comment, Unknown };
+    public enum TokenTypes { Symbol,
+                             WordSymbol,
+                             Identifier,
+                             Number,
+                             String,
+                             Comment,
+                             Unknown };
+    
 
     public class TokenizeError : Exception {
         public TokenizeError(string msg) : base(msg) {
@@ -95,6 +102,7 @@ namespace PascalDotNet {
                 token.Text = "";
                 token.Type = TokenTypes.Number;
 
+                // TODO: expand to read non-integers
                 while (digits.Contains(c.ToString())) {
                     token.Text += c;
                     column++;
@@ -236,6 +244,7 @@ namespace PascalDotNet {
         }
 
         private Boolean SkipToNonWhite(StringCollection code, ref int line, ref int column) {
+            
             // skip to next line until you're no longer at the end of a line
             while (column >= code[line].Length) {
                 line++;
@@ -302,8 +311,8 @@ namespace PascalDotNet {
 
             }
 
-
             return tokens;
+            
         }
 
         public Tokenizer() {

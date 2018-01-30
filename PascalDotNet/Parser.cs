@@ -4,47 +4,72 @@ using System.Collections.Generic;
 namespace PascalDotNet {
     public class Parser {
 
-        private Boolean TryParseBlock(List<Token> tokens,
-                                      out int position,
-                                      out ASTNode node) {
-            position = 0;
+        private const string Digits = "0123456789";
+        private const string Letters = "abcdefghijklmnopqrstuvwxyz";
+
+        public Boolean TryParseIdentifier(List<Token> tokens,
+                                          ref int position,
+                                          out ASTNode node) {
+
+            Token token = tokens[position];
+
+            if (token.Type == TokenTypes.Identifier) {
+                node = new IdentifierNode(token.Text);
+                node.CharacterNumber = token.Column;
+                node.LineNumber = token.Line;
+                position++;
+                return true;
+            }
             node = null;
             return false;
         }
-        
-        private Boolean TryParseProgram(List<Token> tokens,
-                                        ref int position,
-                                        ref ASTNode node) {
 
-            int nextPos = position;
-            
-            if (tokens[nextPos].Text == "program") {
-                nextPos++;
-                node = new ProgramNode(tokens[nextPos].Text);
+        public Boolean TryParseInteger(List<Token> tokens,
+                                       ref int position,
+                                       out ASTNode node) {
 
-                nextPos++;
-                
-                //TODO: for ISO Pascal, more stuff can be here
-                
-                if (tokens[nextPos].Text != ";") {
-                    return false;
-                }
+            Token token = tokens[position];
+            int tmpInt;
 
-                nextPos++;
-
-                
-                
-                position = nextPos;
+            if (token.Type == TokenTypes.Number && int.TryParse(token.Text, out tmpInt)) {
+                IntegerNode outNode = new IntegerNode(tmpInt);
+                node = outNode;
+                position++;
                 return true;
             }
-
+            node = null;
             return false;
-
         }
-        
+
+
+
         public ASTNode Parse(List<Token> tokens) {
-            // TODO: Make this a real parser
-            return new ProgramNode("wat");
+            BlockNode block = new BlockNode();
+
+            ASTNode curNode = null;
+            int pos = 0;
+
+            Boolean cont = true;
+
+            while (cont) {
+
+                if ((cont = TryParseIdentifier(tokens,
+                                               ref pos,
+                                               out curNode))) {
+                    block.Children.Add(curNode);
+                }
+                else if ((cont = TryParseInteger(tokens,
+                                                 ref pos,
+                                                 out curNode))) {
+                    block.Children.Add(curNode);
+                }
+
+                // don't continue if there are no more tokens
+                cont = cont && pos < tokens.Count;
+
+            }
+
+            return block;
         }
 
         public Parser() {
